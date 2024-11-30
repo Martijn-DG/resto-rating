@@ -1,7 +1,7 @@
 rm(list=ls())
 
-library(rvest) #https://r4ds.hadley.nz/webscraping
-
+# library(rvest)
+# 
 # 
 # 
 # html <- read_html("https://www.gaultmillau.be/nl/restaurants")
@@ -222,16 +222,29 @@ library(rvest) #https://r4ds.hadley.nz/webscraping
 # 
 # #################################################################################
 
-#select and ctrl+shift+c to comment/uncomment
+
 
 load("C:/Users/Martijn/Desktop/resto.RData")
 
-boxplot(scores.y ~ scores.x, data = df_merge)
+colnames(df_merge) <- c("Names", "Michelin", "Gault.Millau")
+
+library(data.table)
+setDT(df_merge)[ , list(mean_gr = round(mean(Gault.Millau), digits = 2)) , by = .(Michelin)]
+
+boxplot(Gault.Millau ~ Michelin, data = df_merge)
 
 library(ggplot2)
-ggplot(df_merge, aes(y = scores.y, x = scores.x, color = scores.x)) + geom_point() + geom_jitter(width = 0.3, height = 0.05)
+ggplot(df_merge, aes(y = Gault.Millau, x = Michelin, color = Michelin)) + 
+  geom_jitter(width = 0.3, height = 0.05)
 
 
+###
 
+h1 <- df_merge[df_merge$Michelin==0 & df_merge$Gault.Millau>15.5]
+h2 <- df_merge[df_merge$Michelin==1 & df_merge$Gault.Millau>17]
+h3 <- df_merge[df_merge$Michelin==2 & df_merge$Gault.Millau>18]
+high <- rbind(h1, h2, h3)
 
-
+l1 <- df_merge[df_merge$Michelin==1 & df_merge$Gault.Millau<13.5]
+l2 <- df_merge[df_merge$Michelin==2 & df_merge$Gault.Millau<16.5]
+low <- rbind(l1, l2)
