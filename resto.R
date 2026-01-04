@@ -284,3 +284,14 @@ high <- rbind(h1, h2, h3)
 l1 <- df_merge[df_merge$Michelin==1 & df_merge$Gault.Millau<14]
 l2 <- df_merge[df_merge$Michelin==2 & df_merge$Gault.Millau<17]
 low <- rbind(l1, l2)
+
+
+###ANOVA
+df_merge$Michelin <- factor(df_merge$Michelin)
+
+restaunova <- aov(formula= Gault.Millau~Michelin, data=df_merge)
+summary(restaunova)
+
+library(effectsize)
+options(es.use_symbols = TRUE)
+eta_squared(restaunova, partial = FALSE)
